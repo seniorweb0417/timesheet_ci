@@ -62,6 +62,7 @@ $(document).ready(function() {
             },
             success: function(ret) {
                 console.log(ret);
+                alert('Success');
                 return false;
             }
         });

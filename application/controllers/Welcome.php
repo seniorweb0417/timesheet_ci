@@ -64,7 +64,7 @@ class Welcome extends CI_Controller {
 								<div class="col-md-2 col-sm-2 col-xs-2">' . $date . '</div>
 							</div>
 						</form>
-						<table class="table table-bordered table-striped" id="time_table">
+						<table class="table table-bordered table-striped" id="time_table" style="width: 100%">
 							<thead>
 								<tr>
 									<th>Employee Name</th>
@@ -96,17 +96,17 @@ class Welcome extends CI_Controller {
 
 		//Create the PDF
 		if ($path = $this->html2pdf->create('save')) {
-			$this->load->library('email');
-
+			
 			$config['protocol']='smtp';
-			$config['smtp_host']='ssl://smtp.googlemail.com';
+			$config['smtp_host']='ssl://smtp.gmail.com';
 			$config['smtp_port']='465';
 			$config['smtp_timeout']='30';
 			$config['smtp_user']='emstimesheet85@gmail.com';
 			$config['smtp_pass']='EMST1m3sh33t!';
 			$config['charset']='utf-8';
 
-			$this->email->initialize($config);
+			$this->load->library('email', $config);
+			// $this->email->initialize($config);
 
 			$this->email->from('Kirk Officer', 'Officer');
 			$this->email->to('seniorweb0417@outlook.com'); // need replace AccountingClerk@emtns.loc
