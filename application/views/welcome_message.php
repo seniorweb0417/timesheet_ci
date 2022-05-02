@@ -14,10 +14,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-		<script src="https://unpkg.com/jspdf-autotable@3.5.22/dist/jspdf.plugin.autotable.js"></script>
-		<!-- <script src="https://unpkg.com/jspdf-autotable@3.5.23/dist/jspdf.plugin.autotable.js"></script> -->
-		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 		<script src="<?php echo base_url() ?>assets/js/script.js"></script>
 	</head>
 	<body>
@@ -39,7 +35,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 				</div>
 			</form>
-			<div class="text-right"><button class="btn btn-success" onClick="add_row();">Add Employee</button></div>
+			<div class="text-right">
+				<button class="btn btn-success" onClick="add_row();">Add Employee</button>
+				<button class="btn btn-primary" onClick="save_rows();">Save</button>
+			</div>
 			<table class="table table-bordered table-striped" id="time_table">
 				<thead>
 					<tr>
@@ -62,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</thead>
 				<tbody>
 				<?php
-					for ($i = 0; $i < 10; $i ++) {
+					for ($i = 0; $i < 5; $i ++) {
 						echo '
 						<tr>
 							<td contenteditable></td>
@@ -79,7 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<td class="edit-item" contenteditable></td>
 							<td class="total_hrs"></td>
 							<td contenteditable></td>
-							<td><a href="javascript:void(0);" class="remove_tr"><i class="glyphicon glyphicon-trash"></i></a></td>
+							<td class="need_hide"><a href="javascript:void(0);" class="remove_tr"><i class="glyphicon glyphicon-trash"></i></a></td>
 						</tr>';
 					}
 				?>				

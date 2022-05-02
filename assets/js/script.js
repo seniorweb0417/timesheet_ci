@@ -32,67 +32,39 @@ $(document).ready(function() {
     });
 
     $('#report_btn').click(function() {
-        print();
+        if ($('.datepicker').val() == '') {
+            alert('Please enter PAYROLL PERIOD ENDING');
+            return;
+        }
 
-        // $.ajax({
-        //     url: $('#base_url').val() + 'index.php/welcome/sendEmail',
-        //     method: 'POST',
-        //     success: function(ret) {
-        //         console.log(ret);
-        //         return false;
-        //     }
-        // });
+        if ($('.sign').html() == '') {
+            alert('Please approve before sending');
+            return;
+        }
 
-        /*
-        $('.hidden_date').html($('.datepicker').val());
-
-        var option = {
-            orientation: 'l',
-            unit: 'px',
-            format: [1820, 700],
-            putOnlyUsedFonts:true
-        };
-
-        var doc = new jsPDF(option);
-        var elementHTML = $('body').html();
-        var specialElementHandlers = {
-            '#approve_modal_btn': function (element, renderer) {
-                return true;
-            },
-            '#password_modal': function (element, renderer) {
-                return true;
-            },
-            '#action_wrapper': function (element, renderer) {
-                return true;
-            }
-        };
-
-        // doc.autoTable({html: '#time_table'});
-
-        doc.fromHTML(elementHTML, 15, 15, {
-            'width': 920,
-            'elementHandlers': specialElementHandlers
-        }, function(blah) {
-            doc.save('sample-document.pdf');
+        var tbl_data = '';
+        $('tbody tr').each(function() {
+            tbl_data += '<tr>';
+            $(this).find('td').each(function() {
+                if ($(this).attr('class') == 'need_hide') return true;
+                tbl_data += '<td>' + $(this).html() + '</td>';
+            }) 
+            tbl_data += '</tr>';
         });
-        
 
-
-        // var element = document.getElementById('for_pdf');
-        // var opt = {
-        //     margin:       1,
-        //     filename:     'myfile.pdf',
-        //     image:        { type: 'jpeg', quality: 0.98 },
-        //     html2canvas:  { scale: 2 },
-        //     jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
-        // };
-
-        // // New Promise-based usage:
-        // html2pdf().set(opt).from(element).save();
-
-        // // Old monolithic-style usage:
-        // html2pdf(element, opt);
-        */
+        $.ajax({
+            url: $('#base_url').val() + 'index.php/welcome/sendEmail',
+            method: 'POST',
+            data: {
+                date: $('.datepicker').val(),
+                img: $('.sign img').attr('src'),
+                tbl_data: tbl_data
+            },
+            success: function(ret) {
+                console.log(ret);
+                return false;
+            }
+        });
     });
 
     $(document).on('click', '.remove_tr', function() {
@@ -106,8 +78,59 @@ $(document).ready(function() {
         show_sign();
     });
 
+    initialTbl();
+
     credentials = JSON.parse($('#credential').val());
 });
+
+function initialTbl() {
+    var s = localStorage.getItem('kirk_save');
+    var html = '';
+    if (s) {
+        var saved = JSON.parse(s);
+        for (var i in saved) {
+            html += '<tr>';
+            html += '   <td contenteditable>' + saved[i][0] + '</td>';
+            html += '   <td contenteditable>' + saved[i][1] + '</td>';
+            html += '   <td contenteditable>' + saved[i][2] + '</td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="total_hrs"></td>';
+            html += '   <td contenteditable></td>';
+            html += '   <td class="need_hide"><a href="javascript:void(0);" class="remove_tr"><i class="glyphicon glyphicon-trash"></i></a></td>';
+            html += '</tr>';
+        }
+    } else {
+        for (var i = 0; i < 5; i ++) {
+            html += '<tr>';
+            html += '   <td contenteditable></td>';
+            html += '   <td contenteditable></td>';
+            html += '   <td contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="edit-item" contenteditable></td>';
+            html += '   <td class="total_hrs"></td>';
+            html += '   <td contenteditable></td>';
+            html += '   <td class="need_hide"><a href="javascript:void(0);" class="remove_tr"><i class="glyphicon glyphicon-trash"></i></a></td>';
+            html += '</tr>';
+        }
+    }
+
+    $('tbody').html(html);
+}
 
 function show_sign() {
     var passwd = $('#password').val();
@@ -117,8 +140,8 @@ function show_sign() {
     }
 
     if (credentials[passwd] !== undefined) {
-        // var file_link = $('#base_url').val() + 'assets/img/' + credentials[passwd] + '.jpg';
-        var file_link = 'assets/img/' + credentials[passwd] + '.jpg';
+        var file_link = $('#base_url').val() + 'assets/img/' + credentials[passwd] + '.jpg';
+        // var file_link = 'assets/img/' + credentials[passwd] + '.jpg';
         $('.sign').html('<img src="' + file_link + '">');
     } else {
         $('.sign').html('');
@@ -144,8 +167,36 @@ function add_row() {
     html += '   <td class="edit-item" contenteditable></td>';
     html += '   <td class="total_hrs"></td>';
     html += '   <td contenteditable></td>';
-    html += '   <td><a href="javascript:void(0);" class="remove_tr"><i class="glyphicon glyphicon-trash"></i></a></td>';
+    html += '   <td class="need_hide"><a href="javascript:void(0);" class="remove_tr"><i class="glyphicon glyphicon-trash"></i></a></td>';
     html += '</tr>';
 
     $('table tbody').append(html);
+}
+
+function save_rows() {
+    var tr = [];
+    $('tbody tr').each(function() {
+        var sub = [];
+        var flag = true;
+        $(this).find('td').each(function(i, el) {
+            if (i === 0) {
+                if ($(this).html() == '') {
+                    flag = false;
+                    return true;
+                } 
+                sub.push($(this).html());
+            } else if (i === 1) {
+                if (!flag) return true;
+                sub.push($(this).html());
+            } else if (i === 2) {
+                if (!flag) return true;
+                sub.push($(this).html());
+            }
+        });
+
+        if (sub.length) tr.push(sub);
+    });
+
+    console.log(tr);
+    localStorage.setItem("kirk_save", JSON.stringify(tr));
 }

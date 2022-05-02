@@ -92,3 +92,5 @@ defined('KIRK_CREDENTIAL')      OR define('KIRK_CREDENTIAL', array(
     'Password4' => 'pamchannel',
     'Password5' => 'rogerrobinson',
 ));
+
+defined('DOMPDF_ENABLE_HTML5PARSER')      OR define('DOMPDF_ENABLE_HTML5PARSER', true); // highest automatically-assigned error code
